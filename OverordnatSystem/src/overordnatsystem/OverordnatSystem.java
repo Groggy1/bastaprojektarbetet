@@ -392,27 +392,19 @@ public class OverordnatSystem {
         ds = new DataStore();
         DataStore ds2 = new DataStore();
         DataStore ds4 = new DataStore();
+        DataStore ds5 = new DataStore();
+        DataStore ds6 = new DataStore();
         ds3 = new DataStore();
 
         //läser in lagernätet och orderlistan
-        //ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
-        //ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
         ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetet/OverordnatSystem/Lagernatverk_20130213.csv");
         ds.readNet();
-        ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetet/OverordnatSystem/Orders_20130211.csv");
+        ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetet/OverordnatSystem/orders_comb.csv");
         ds.readOrders();
-        ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetet/OverordnatSystem/Orders_20130211.csv");
+        ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetet/OverordnatSystem/orders1.csv");
         ds2.readOrders();
-
-        for (int i = 0; i < ds.shelves; i++) {
-            System.out.println(ds.shelfNumber[i]);
-        }
-        //ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
-        //ds.readNet();
-        //ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
-        //ds.readOrders();
-        //ds2.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
-        //ds2.readOrders();
+        ds5.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetet/OverordnatSystem/orders2.csv");
+        ds5.readOrders();
 
         //startar det grafiska gränssnittet
         cui = new ControlUI(ds);
@@ -432,6 +424,17 @@ public class OverordnatSystem {
                 System.out.println("");
             }
         }
+
+
+        cui.jTextArea4.append("Ej optimerad orderlista:\n");
+        for (int j = 0; j < ds5.orders; j++) {
+            if (ds5.orderStart[j] != ds5.orderEnd[j]) {
+                cui.jTextArea4.append("" + ds5.orderStart[j]);
+                cui.jTextArea4.append(" " + ds5.orderEnd[j] + "\n");
+                System.out.println("");
+            }
+        }
+
 
         //Väntar på att användaren väljer att klicka på "start" i gränssnittet, om inte så sova fem sekunder och kolla igen
         /*while (!ds.start) {
@@ -460,17 +463,23 @@ public class OverordnatSystem {
         ds3.fileName = ds2.fileName;
         ds4.orders = ds2.orders;
         ds4.fileName = ds2.fileName;
+        ds6.orders = ds5.orders;
+        ds6.fileName = ds5.fileName;
 
         System.out.println("\n\n\n\n\n");
 
         System.out.println("\n\n");
-        int start;
-        int stop;
+        int start1 = 0, start2 = 0;
+        int stop1 = 0, stop2 = 0;
         OptPlan op = new OptPlan(ds);
 
-        LinkedList<Vertex> path;
+        LinkedList<Vertex> path1;
+        LinkedList<Vertex> path2;
 
         //Optimerar orderlistan genom att ta bort onödiga förflyttningar och ordnar ordrarna på så sätt att avståndet som körs utan låda minimeras
+        ds6 = this.onodigaforflytt(ds5);
+        ds6 = this.optorderlista(ds6, op);
+
         ds3 = this.onodigaforflytt(ds2);
         ds3 = this.optorderlista(ds3, op);
 
@@ -490,38 +499,69 @@ public class OverordnatSystem {
             }
         }
 
+        cui.jTextArea4.append("Optimerad orderlista:\n");
+        for (int j = 0; j < ds6.orders; j++) {
+            if (ds6.orderStart[j] != ds6.orderEnd[j]) {
+                cui.jTextArea4.append("" + ds6.orderStart[j]);
+                cui.jTextArea4.append(" " + ds6.orderEnd[j] + "\n");
+                //System.out.println("");
+                cui.jTextArea2.setCaretPosition(cui.jTextArea2.getDocument().getLength());
+            }
+        }
+
         System.out.println("\n\n");
 
         //Loopa igenom orderlistan för att få fram GPS-koordinater till roboten
         String GPS;
-        for (int i = 0; i < ds3.orders; i++) {
+        for (int i = 0; i < Math.max(ds3.orders, ds6.orders); i++) {
             //stoppa roboten när den precis har lämnat en låda men bibehåll blåtands uppkopplingen
-                /*while (!ds.start) {
-             try {
-             Thread.sleep(5000);
-             } catch (Exception e) {
-             System.out.print(e.toString());
-             }
-             }*/
+            while (!ds.start) {
+                try {
+                    Thread.sleep(5000);
+                } catch (Exception e) {
+                    System.out.print(e.toString());
+                }
+            }
             //Förflyttning mellan ordrar
             GPS = "";
             if (i == 0) {
                 //Om första, starta i A
-                start = ds.shelfNode[0];
-                stop = (int) ds.shelfNode[ds3.orderStart[i]];
+                start1 = ds.shelfNode[0];
+                stop1 = (int) ds.shelfNode[ds3.orderStart[i]];
+                start2 = ds.shelfNode[0];
+                stop2 = (int) ds.shelfNode[ds6.orderStart[i]];
                 cui.jTextArea3.setText("0 -> " + ds3.orderStart[i] + "\n");
+                cui.jTextArea5.setText("0 -> " + ds6.orderStart[i] + "\n");
             } else {
                 //Annars starta där föregående flytt slutade
-                start = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
-                stop = (int) ds.shelfNode[ds3.orderStart[i]];
-                cui.jTextArea3.setText(ds3.orderEnd[i - 1] + " -> " + ds3.orderStart[i] + "\n");
+                if (i < ds3.orders) {
+                    start1 = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
+                    stop1 = (int) ds.shelfNode[ds3.orderStart[i]];
+                    cui.jTextArea3.setText(ds3.orderEnd[i - 1] + " -> " + ds3.orderStart[i] + "\n");
+                }
+                if (i < ds6.orders) {
+                    start2 = (int) ds.shelfNode[ds6.orderEnd[i - 1]];
+                    stop2 = (int) ds.shelfNode[ds6.orderStart[i]];
+                    cui.jTextArea5.setText(ds6.orderEnd[i - 1] + " -> " + ds6.orderStart[i] + "\n");
+                }
             }
-            if (start != stop) {
-                //Skapa en rutt med hjälp av Dijkstras och omvandla den till GPSkoordinater
-                path = op.createPlan(start, stop);
-                GPS = this.GPSkoordinater(path, i, i);
-            } else if (start == stop && start == 24) {
-                //Om två hyllor efter varandra är på samma nod, vänd bara om och plocka
+            //Nollställer kartan
+            Arrays.fill(ds.arcColor, 0);
+            //Ser till att roboten står på rätt ställe på kartan som den gör i verkligheten så programlogiken pausas
+            ds.robotX = ds.nodeX[start1 - 1];
+            ds.robotY = ds.nodeY[start1 - 1];
+            //Uppdaterar kartan
+            cui.repaint();
+            if (start1 != stop1) {
+                path1 = op.createPlan(start1, stop1);
+                GPS = this.GPSkoordinater(path1, i, i);
+            } else if (start1 == stop1 && start1 == 24) {
+                GPS += "J";
+            }
+            if (start2 != stop2) {
+                path2 = op.createPlan(start2, stop2);
+                GPS = this.GPSkoordinater(path2, i, i);
+            } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
             //Skriver ut vad som ska skickas till roboten
@@ -542,8 +582,8 @@ public class OverordnatSystem {
              */
 
             //Måla om kartan så roboten står på rätt ställe och planerad färdväg är målas röd
-            ds.robotX = ds.nodeX[start - 1];
-            ds.robotY = ds.nodeY[start - 1];
+            ds.robotX = ds.nodeX[start1 - 1];
+            ds.robotY = ds.nodeY[start1 - 1];
             cui.repaint();
 
             //Simuleringsskit
@@ -558,15 +598,28 @@ public class OverordnatSystem {
 
             //Räkna ut förflyttning av LÅDA!
             GPS = "";
-            start = (int) ds.shelfNode[ds3.orderStart[i]];
-            stop = (int) ds.shelfNode[ds3.orderEnd[i]];
-            cui.jTextArea3.setText(ds3.orderStart[i] + " -> " + ds3.orderEnd[i] + "\n");
+            if (i < ds3.orders) {
+                start1 = (int) ds.shelfNode[ds3.orderStart[i]];
+                stop1 = (int) ds.shelfNode[ds3.orderEnd[i]];
+                cui.jTextArea3.setText(ds3.orderStart[i] + " -> " + ds3.orderEnd[i] + "\n");
+            }
+            if (i < ds6.orders) {
+                start2 = (int) ds.shelfNode[ds6.orderStart[i]];
+                stop2 = (int) ds.shelfNode[ds6.orderEnd[i]];
+                cui.jTextArea5.setText(ds6.orderStart[i] + " -> " + ds6.orderEnd[i] + "\n");
+            }
 
             //Samma som för förflyttning utan låda
-            if (start != stop) {
-                path = op.createPlan(start, stop);
-                GPS = this.GPSkoordinater(path, i, i);
-            } else if (start == stop && start == 24) {
+            if (start1 != stop1) {
+                path1 = op.createPlan(start1, stop1);
+                GPS = this.GPSkoordinater(path1, i, i);
+            } else if (start1 == stop1 && start1 == 24) {
+                GPS += "J";
+            }
+            if (start2 != stop2) {
+                path2 = op.createPlan(start2, stop2);
+                GPS = this.GPSkoordinater(path2, i, i);
+            } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
 
@@ -588,8 +641,8 @@ public class OverordnatSystem {
              */
 
             //Samma som för förflyttning utan låda
-            ds.robotX = ds.nodeX[start - 1];
-            ds.robotY = ds.nodeY[start - 1];
+            ds.robotX = ds.nodeX[start1 - 1];
+            ds.robotY = ds.nodeY[start1 - 1];
             cui.repaint();
             //Simuleringstrams
             try {
@@ -601,8 +654,8 @@ public class OverordnatSystem {
             //Nollställer kartan
             Arrays.fill(ds.arcColor, 0);
             //Ser till att roboten står på rätt ställe på kartan som den gör i verkligheten så programlogiken pausas
-            ds.robotX = ds.nodeX[stop - 1];
-            ds.robotY = ds.nodeY[stop - 1];
+            ds.robotX = ds.nodeX[stop1 - 1];
+            ds.robotY = ds.nodeY[stop1 - 1];
             //Uppdaterar kartan
             cui.repaint();
         }
