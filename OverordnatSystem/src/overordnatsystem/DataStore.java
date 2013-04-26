@@ -28,8 +28,10 @@ public class DataStore {
     String[] shelfDirection = new String[20];
     int[] arcColor = new int[1000];
     boolean updateUIflag = false;
-    double robotX;
-    double robotY;
+    double robot1X;
+    double robot1Y;
+    double robot2X;
+    double robot2Y;
     boolean startnod14anvand = false;
     boolean start = false;
 

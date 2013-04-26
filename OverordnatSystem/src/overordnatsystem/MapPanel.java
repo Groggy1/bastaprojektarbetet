@@ -26,6 +26,7 @@ public class MapPanel extends JPanel {
         final Color DARK_COLOR = new Color(0, 0, 0);
         final Color RED_COLOR = new Color(255, 0, 0);
         final Color BLUE_COLOR = new Color(0, 0, 200);
+        final Color GREEN_COLOR = new Color(0, 255, 0);
         int x, y;
         int x1, y1;
         int x2, y2;
@@ -79,17 +80,21 @@ public class MapPanel extends JPanel {
                     y1 = y1 + 3;
                     y2 = y2 + 3;
                 }
-                if(ds.arcColor[i] == 1){
+                if (ds.arcColor[i] == 1) {
                     g.setColor(RED_COLOR);
-                }
-                else if(ds.arcColor[i]==0){
+                } else if (ds.arcColor[i] == 2) {
+                    g.setColor(GREEN_COLOR);
+                } else if (ds.arcColor[i] == 0) {
                     g.setColor(BLUE_COLOR);
                 }
                 g.drawLine(x1, height - y1, x2, height - y2);
             }
-            x = (int) (ds.robotX * xscale);
-            y = (int) (ds.robotY * yscale);
-            g.drawOval(x - ((circlesize+10) / 2), height - y - (circlesize+10) / 2, circlesize+10, circlesize+10);
+            x = (int) (ds.robot1X * xscale);
+            y = (int) (ds.robot1Y * yscale);
+            g.drawOval(x - ((circlesize + 10) / 2), height - y - (circlesize + 10) / 2, circlesize + 10, circlesize + 10);
+            x = (int) (ds.robot2X * xscale);
+            y = (int) (ds.robot2Y * yscale);
+            g.drawOval(x - ((circlesize + 10) / 2), height - y - (circlesize + 10) / 2, circlesize + 10, circlesize + 10);
 
         }
     } // end paintComponent

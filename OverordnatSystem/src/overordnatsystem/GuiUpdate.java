@@ -35,7 +35,7 @@ public class GuiUpdate implements Runnable {
             while (i <= 20) {
                 Thread.sleep(sleepTime / 20);
                 cui.appendStatus("Jag är tråd GuiUpdate! För " + i + ":te gången.");
-                ds.robotX = ds.robotX + 10; //blir ds.robotX = ds.nodeX[slutnoden när roboten har sagt att den är klar] - 1  nodeX[GPS[GPS.length-1]]
+                ds.robot1X = ds.robot1X + 10; //blir ds.robotX = ds.nodeX[slutnoden när roboten har sagt att den är klar] - 1  nodeX[GPS[GPS.length-1]]
                 cui.repaint();
                 i++;
             }

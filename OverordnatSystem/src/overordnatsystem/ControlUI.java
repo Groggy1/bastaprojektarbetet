@@ -119,7 +119,7 @@ public class ControlUI extends javax.swing.JFrame {
         jTextArea2.setForeground(new java.awt.Color(0, 0, 153));
         jTextArea2.setLineWrap(true);
         jTextArea2.setRows(5);
-        jTextArea2.setBorder(javax.swing.BorderFactory.createTitledBorder("Orderlista:"));
+        jTextArea2.setBorder(javax.swing.BorderFactory.createTitledBorder("Robot1:"));
         jScrollPane2.setViewportView(jTextArea2);
 
         jTextArea3.setEditable(false);
@@ -139,7 +139,7 @@ public class ControlUI extends javax.swing.JFrame {
         jTextArea4.setForeground(new java.awt.Color(0, 0, 153));
         jTextArea4.setLineWrap(true);
         jTextArea4.setRows(5);
-        jTextArea4.setBorder(javax.swing.BorderFactory.createTitledBorder("Orderlista:"));
+        jTextArea4.setBorder(javax.swing.BorderFactory.createTitledBorder("Robot2:"));
         jScrollPane4.setViewportView(jTextArea4);
 
         jTextArea5.setEditable(false);

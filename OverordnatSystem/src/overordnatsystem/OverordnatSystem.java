@@ -303,7 +303,7 @@ public class OverordnatSystem {
                             if (start != stop) {
                                 //System.out.println("Start " + start + " Stop " + stop);
                                 //Planera via dijkstras färdvägen
-                                path = op.createPlan(start, stop);
+                                path = op.createPlan(start, stop, 1);
                                 //beräkna kostnaden för den optimala färdvägen mellan start och stop
                                 for (int k = 0; k < path.size() - 1; k++) {
                                     diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
@@ -322,7 +322,7 @@ public class OverordnatSystem {
                             if (start != stop) {
                                 //System.out.println("Start " + start + " Stop " + stop);
                                 //Planera via dijkstras färdvägen
-                                path = op.createPlan(start, stop);
+                                path = op.createPlan(start, stop, 1);
                                 //beräkna kostnaden för den optimala färdvägen mellan start och stop
                                 for (int k = 0; k < path.size() - 1; k++) {
                                     diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
@@ -548,18 +548,20 @@ public class OverordnatSystem {
             //Nollställer kartan
             Arrays.fill(ds.arcColor, 0);
             //Ser till att roboten står på rätt ställe på kartan som den gör i verkligheten så programlogiken pausas
-            ds.robotX = ds.nodeX[start1 - 1];
-            ds.robotY = ds.nodeY[start1 - 1];
+            ds.robot1X = ds.nodeX[start1 - 1];
+            ds.robot1Y = ds.nodeY[start1 - 1];
+            ds.robot2X = ds.nodeX[start2 - 1];
+            ds.robot2Y = ds.nodeY[start2 - 1];
             //Uppdaterar kartan
             cui.repaint();
             if (start1 != stop1) {
-                path1 = op.createPlan(start1, stop1);
+                path1 = op.createPlan(start1, stop1, 1);
                 GPS = this.GPSkoordinater(path1, i, i);
             } else if (start1 == stop1 && start1 == 24) {
                 GPS += "J";
             }
             if (start2 != stop2) {
-                path2 = op.createPlan(start2, stop2);
+                path2 = op.createPlan(start2, stop2, 2);
                 GPS = this.GPSkoordinater(path2, i, i);
             } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
@@ -582,8 +584,10 @@ public class OverordnatSystem {
              */
 
             //Måla om kartan så roboten står på rätt ställe och planerad färdväg är målas röd
-            ds.robotX = ds.nodeX[start1 - 1];
-            ds.robotY = ds.nodeY[start1 - 1];
+            ds.robot1X = ds.nodeX[start1 - 1];
+            ds.robot1Y = ds.nodeY[start1 - 1];
+            ds.robot2X = ds.nodeX[start2 - 1];
+            ds.robot2Y = ds.nodeY[start2 - 1];
             cui.repaint();
 
             //Simuleringsskit
@@ -611,13 +615,13 @@ public class OverordnatSystem {
 
             //Samma som för förflyttning utan låda
             if (start1 != stop1) {
-                path1 = op.createPlan(start1, stop1);
+                path1 = op.createPlan(start1, stop1, 1);
                 GPS = this.GPSkoordinater(path1, i, i);
             } else if (start1 == stop1 && start1 == 24) {
                 GPS += "J";
             }
             if (start2 != stop2) {
-                path2 = op.createPlan(start2, stop2);
+                path2 = op.createPlan(start2, stop2, 2);
                 GPS = this.GPSkoordinater(path2, i, i);
             } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
@@ -641,12 +645,14 @@ public class OverordnatSystem {
              */
 
             //Samma som för förflyttning utan låda
-            ds.robotX = ds.nodeX[start1 - 1];
-            ds.robotY = ds.nodeY[start1 - 1];
+            ds.robot1X = ds.nodeX[start1 - 1];
+            ds.robot1Y = ds.nodeY[start1 - 1];
+            ds.robot2X = ds.nodeX[start2 - 1];
+            ds.robot2Y = ds.nodeY[start2 - 1];
             cui.repaint();
             //Simuleringstrams
             try {
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             } catch (InterruptedException ex) {
                 System.out.println("Fel");
             }
@@ -654,8 +660,10 @@ public class OverordnatSystem {
             //Nollställer kartan
             Arrays.fill(ds.arcColor, 0);
             //Ser till att roboten står på rätt ställe på kartan som den gör i verkligheten så programlogiken pausas
-            ds.robotX = ds.nodeX[stop1 - 1];
-            ds.robotY = ds.nodeY[stop1 - 1];
+            ds.robot1X = ds.nodeX[stop1 - 1];
+            ds.robot1Y = ds.nodeY[stop1 - 1];
+            ds.robot2X = ds.nodeX[stop2 - 1];
+            ds.robot2Y = ds.nodeY[stop2 - 1];
             //Uppdaterar kartan
             cui.repaint();
         }

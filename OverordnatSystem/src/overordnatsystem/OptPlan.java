@@ -22,7 +22,7 @@ public class OptPlan {
         this.ds = ds;
     }
 
-    public LinkedList<Vertex> createPlan(int start, int stop) {
+    public LinkedList<Vertex> createPlan(int start, int stop, int color) {
         nodes = new ArrayList<Vertex>();
         edges = new ArrayList<Edge>();
         LinkedList<Vertex> path;
@@ -62,7 +62,7 @@ public class OptPlan {
                         && ds.arcEnd[j]
                         == Integer.parseInt(path.get(i + 1).getId())) {
                     System.out.println("Arc: " + j);
-                    ds.arcColor[j] = 1;
+                    ds.arcColor[j] = color;
                 }
             }
         }
