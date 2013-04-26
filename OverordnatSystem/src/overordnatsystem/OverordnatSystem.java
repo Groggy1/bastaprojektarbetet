@@ -5,8 +5,6 @@
 package overordnatsystem;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 //import javax.microedition.io.Connector;
@@ -22,64 +20,11 @@ public class OverordnatSystem {
     DataStore ds3;
     ControlUI cui;
 
-    public String bluetoothkom(BufferedReader bluetooth_in) {
-        String meddelande_ut = "";
-        try {
-            cui.jTextArea1.append("väntar\n");
-            cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength());
-            //Väntar på meddelande från robot
-            String meddelande_in = bluetooth_in.readLine();
-            System.out.println(meddelande_in);
-
-            //Om distans används följande variabler
-            String O = "" + meddelande_in.charAt(0);
-            String U = meddelande_in.substring(1);
-
-            //Om robot mottar orderlista med x som start och z som slut fås ack tillbaka
-            if (meddelande_in.equalsIgnoreCase("C")) {
-                cui.jTextArea1.append("Jag har fått ack\n");
-                cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength());
-                // System.out.println("Jag ska vänta 5000ms");
-                // Thread.sleep(5000);
-                // System.out.println("väntar");
-
-                // meddelande_in = null;
-                //Vänta på hur det går för roboten, dvs om den klarade orderlistan eller inte
-                meddelande_in = bluetooth_in.readLine();
-
-                System.out.println("meddelande_in efter ack " + meddelande_in);
-
-                //Klarade orderlistan
-                if (meddelande_in.equalsIgnoreCase("y")) {
-                    cui.jTextArea1.append("klar\nkalla på optimeringen\n");
-                    cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength()); //autoscroll
-                    //System.out.println("");
-                    meddelande_ut = "start";
-                } else if (meddelande_in.equalsIgnoreCase("n")) {
-                    //Klarade inte orderlistan
-                    cui.jTextArea1.append("Jag är LITHe vilse\n");
-                    meddelande_ut = "start";
-
-                }
-            } else if (meddelande_in.equalsIgnoreCase("e")) {
-                //Felsändning
-                System.out.println("Skicka om");
-                meddelande_ut = "start";
-            } else if (O.equalsIgnoreCase("D")) {
-                //Distans
-                System.out.println("Distansen är: " + U + "cm");
-            }
-        } catch (Exception e) {
-            System.out.print(e.toString());
-        }
-        return meddelande_ut;
-    }
-
     public String GPSkoordinater(LinkedList<Vertex> path, int istart, int istop) {
         String GPS = "";
         //System.out.println("start " + istart + "stop " + istop + " ds.shelfDirection[ds3.orderStart[istart]] " + ds.shelfDirection[ds3.orderStart[istart]]);
         for (int j = 0; j < path.size(); j++) {
-            System.out.println(path.get(j).getId());
+            //System.out.println(path.get(j).getId());
             //System.out.println(ds.shelfNumber[Integer.parseInt(path.get(j).getId())]);
             boolean startnod14a = true;
             boolean startnod14b = true;
@@ -87,7 +32,7 @@ public class OverordnatSystem {
                 //System.out.println("path.get(j).getId() " + path.get(j).getId());
                 //System.out.println("path.get(j+1).getId() " + path.get(j + 1).getId());
                 if (Integer.parseInt(path.get(j).getId()) == 14 && Integer.parseInt(path.get(j + 1).getId()) == 15 && !ds.startnod14anvand) {
-                    System.out.println("hej");
+                    //System.out.println("hej");
                     startnod14a = false;
                     ds.startnod14anvand = true;
                 } else if (Integer.parseInt(path.get(j).getId()) == 14 && Integer.parseInt(path.get(j + 1).getId()) == 6 && !ds.startnod14anvand) {
@@ -96,7 +41,7 @@ public class OverordnatSystem {
                 }
             }
             if (j == 0 && startnod14a && startnod14b) {
-                System.out.println("ds.shelfDirection[ds3.orderStart[istart]] " + ds.shelfDirection[ds3.orderStart[istart]]);
+                //System.out.println("ds.shelfDirection[ds3.orderStart[istart]] " + ds.shelfDirection[ds3.orderStart[istart]]);
                 if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("N")) {
                     int a = Integer.parseInt(path.get(j).getId());
                     int b = Integer.parseInt(path.get(j + 1).getId());
@@ -106,11 +51,11 @@ public class OverordnatSystem {
                         GPS += "R";
                     } else if (a - b == 1) {
                         GPS += "L";
-                        System.out.println("APA!!!");
+                        //System.out.println("APA!!!");
                         //System.out.println("GPS +" + GPS[j]);
                     } else if (b - a == 1) {
                         GPS += "R";
-                        System.out.println("APA2!!!");
+                        //System.out.println("APA2!!!");
                         //System.out.println("GPS +" + GPS[j]);
                     }
                 } else if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("S")) {
@@ -505,7 +450,7 @@ public class OverordnatSystem {
                 cui.jTextArea4.append("" + ds6.orderStart[j]);
                 cui.jTextArea4.append(" " + ds6.orderEnd[j] + "\n");
                 //System.out.println("");
-                cui.jTextArea2.setCaretPosition(cui.jTextArea2.getDocument().getLength());
+                cui.jTextArea4.setCaretPosition(cui.jTextArea4.getDocument().getLength());
             }
         }
 
@@ -513,7 +458,8 @@ public class OverordnatSystem {
 
         //Loopa igenom orderlistan för att få fram GPS-koordinater till roboten
         String GPS;
-        for (int i = 0; i < Math.max(ds3.orders, ds6.orders); i++) {
+        cui.jTextArea1.append("Optimering klar, tryck \"Start\" för att starta robotarna");
+        for (int i = 0; i < Math.max(ds3.orders, ds6.orders) + 1; i++) {
             //stoppa roboten när den precis har lämnat en låda men bibehåll blåtands uppkopplingen
             while (!ds.start) {
                 try {
@@ -538,11 +484,17 @@ public class OverordnatSystem {
                     start1 = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
                     stop1 = (int) ds.shelfNode[ds3.orderStart[i]];
                     cui.jTextArea3.setText(ds3.orderEnd[i - 1] + " -> " + ds3.orderStart[i] + "\n");
+                } else {
+                    start1 = stop1;
+                    cui.jTextArea3.setText("Färdigt");
                 }
                 if (i < ds6.orders) {
                     start2 = (int) ds.shelfNode[ds6.orderEnd[i - 1]];
                     stop2 = (int) ds.shelfNode[ds6.orderStart[i]];
                     cui.jTextArea5.setText(ds6.orderEnd[i - 1] + " -> " + ds6.orderStart[i] + "\n");
+                } else {
+                    start2 = stop2;
+                    cui.jTextArea5.setText("Färdigt");
                 }
             }
             //Nollställer kartan
@@ -556,19 +508,19 @@ public class OverordnatSystem {
             cui.repaint();
             if (start1 != stop1) {
                 path1 = op.createPlan(start1, stop1, 1);
-                GPS = this.GPSkoordinater(path1, i, i);
+                //GPS = this.GPSkoordinater(path1, i, i);
             } else if (start1 == stop1 && start1 == 24) {
                 GPS += "J";
             }
             if (start2 != stop2) {
                 path2 = op.createPlan(start2, stop2, 2);
-                GPS = this.GPSkoordinater(path2, i, i);
+                //GPS = this.GPSkoordinater(path2, i, i);
             } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
             //Skriver ut vad som ska skickas till roboten
-            cui.jTextArea1.append("\nGPS utan låda:\n" + GPS + "\n\n");
-            System.out.println("GPS.längd " + GPS.length() + "\n");
+            //cui.jTextArea1.append("\nGPS utan låda:\n" + GPS + "\n\n");
+            //System.out.println("GPS.längd " + GPS.length() + "\n");
             cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength());
 
             //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
@@ -606,30 +558,36 @@ public class OverordnatSystem {
                 start1 = (int) ds.shelfNode[ds3.orderStart[i]];
                 stop1 = (int) ds.shelfNode[ds3.orderEnd[i]];
                 cui.jTextArea3.setText(ds3.orderStart[i] + " -> " + ds3.orderEnd[i] + "\n");
+            } else {
+                start1 = stop1;
+                cui.jTextArea3.setText("Färdigt");
             }
             if (i < ds6.orders) {
                 start2 = (int) ds.shelfNode[ds6.orderStart[i]];
                 stop2 = (int) ds.shelfNode[ds6.orderEnd[i]];
                 cui.jTextArea5.setText(ds6.orderStart[i] + " -> " + ds6.orderEnd[i] + "\n");
+            } else {
+                start2 = stop2;
+                cui.jTextArea5.setText("Färdigt");
             }
 
             //Samma som för förflyttning utan låda
             if (start1 != stop1) {
                 path1 = op.createPlan(start1, stop1, 1);
-                GPS = this.GPSkoordinater(path1, i, i);
+                //GPS = this.GPSkoordinater(path1, i, i);
             } else if (start1 == stop1 && start1 == 24) {
                 GPS += "J";
             }
             if (start2 != stop2) {
                 path2 = op.createPlan(start2, stop2, 2);
-                GPS = this.GPSkoordinater(path2, i, i);
+                //GPS = this.GPSkoordinater(path2, i, i);
             } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
 
             //Samma som för förflyttning utan låda
-            cui.jTextArea1.append("\nGPS med låda:\n" + GPS + "\n\n");
-            System.out.println("GPS.längd " + GPS.length() + "\n");
+            //cui.jTextArea1.append("\nGPS med låda:\n" + GPS + "\n\n");
+            //System.out.println("GPS.längd " + GPS.length() + "\n");
             cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength());
 
             //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
