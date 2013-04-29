@@ -300,23 +300,23 @@ public class OverordnatSystem {
             }
             boolean clear = false;
             for (int j = 0; j < path1.size(); j++) {
-                if(Integer.parseInt(path1.get(i).getId()) == stop2){
+                if (Integer.parseInt(path1.get(i).getId()) == stop2) {
                     clear = true;
                     break;
                 }
             }
-            if(clear) {
+            if (clear) {
                 Arrays.fill(ds.notoknumber, 0);
                 Arrays.fill(ds.arcColor, 0);
             }
-            
+
             if (start2 != stop2) {
                 path2 = op.createPlan(start2, stop2, 2, true);
                 //GPS = this.GPSkoordinater(path2, i, i);
             } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
-            
+
             if (start1 != stop1 && clear) {
                 path1 = op.createPlan(start1, stop1, 1, true);
                 //GPS = this.GPSkoordinater(path1, i, i);
@@ -344,6 +344,7 @@ public class OverordnatSystem {
             //}
             //Nollställ kartan
             Arrays.fill(ds.arcColor, 0);
+            Arrays.fill(ds.notoknumber, 0);
 
             //Räkna ut förflyttning av LÅDA!
             GPS = "";
@@ -398,6 +399,7 @@ public class OverordnatSystem {
             //}
             //Nollställer kartan
             Arrays.fill(ds.arcColor, 0);
+            Arrays.fill(ds.notoknumber, 0);
             //Ser till att roboten står på rätt ställe på kartan som den gör i verkligheten så programlogiken pausas
             ds.robot1X = ds.nodeX[stop1 - 1];
             ds.robot1Y = ds.nodeY[stop1 - 1];

@@ -52,7 +52,7 @@ public class OptPlan {
         Arrays.fill(ds.notoknumber, 0);
         // Get shortest path
         if (intekrock) {
-            for (int i = 0; i < path.size(); i++) {
+            for (int i = 1; i < path.size() - 1; i++) {
                 ds.notoknumber[i] = Integer.parseInt(path.get(i).getId());
                 System.out.println("ds.notoknumber[i] " + ds.notoknumber[i]);
             }
