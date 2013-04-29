@@ -25,14 +25,17 @@ public class DijkstraAlgorithm {
     private Set<Vertex> unSettledNodes;
     private Map<Vertex, Vertex> predecessors;
     private Map<Vertex, Integer> distance;
+    private DataStore ds;
 
-    public DijkstraAlgorithm(Graph graph) {
+    public DijkstraAlgorithm(Graph graph, DataStore ds) {
         // Create a copy of the array so that we can operate on this array
         this.nodes = new ArrayList<Vertex>(graph.getVertexes());
         this.edges = new ArrayList<Edge>(graph.getEdges());
+        this.ds = ds;
     }
 
     public void execute(Vertex source) {
+        System.out.println("source.toString() " + source.toString());
         settledNodes = new HashSet<Vertex>();
         unSettledNodes = new HashSet<Vertex>();
         distance = new HashMap<Vertex, Integer>();
@@ -41,6 +44,7 @@ public class DijkstraAlgorithm {
         unSettledNodes.add(source);
         while (unSettledNodes.size() > 0) {
             Vertex node = getMinimum(unSettledNodes);
+            System.out.println("node.toString() " + node.toString());
             settledNodes.add(node);
             unSettledNodes.remove(node);
             findMinimalDistances(node);
@@ -50,8 +54,15 @@ public class DijkstraAlgorithm {
     private void findMinimalDistances(Vertex node) {
         List<Vertex> adjacentNodes = getNeighbors(node);
         for (Vertex target : adjacentNodes) {
+            System.out.println("target.toString() " + target.toString());
+            boolean cont = true;
+            for(int i = 0; i < ds.notoknumber.length; i++){
+                if(ds.notoknumber[i] == Integer.parseInt(target.getId())){
+                    cont = false;
+                }
+            }
             if (getShortestDistance(target) > getShortestDistance(node)
-                    + getDistance(node, target)) {
+                    + getDistance(node, target) && cont) {
                 distance.put(target, getShortestDistance(node)
                         + getDistance(node, target));
                 predecessors.put(target, node);

@@ -18,7 +18,7 @@ public class OverordnatSystem {
     DataStore ds;
     DataStore ds3;
     ControlUI cui;
-    
+
     public DataStore optorderlista(DataStore ds3, OptPlan op) {
         //Massa bra variabler
         LinkedList<Vertex> path;
@@ -55,7 +55,7 @@ public class OverordnatSystem {
                             if (start != stop) {
                                 //System.out.println("Start " + start + " Stop " + stop);
                                 //Planera via dijkstras färdvägen
-                                path = op.createPlan(start, stop, 1);
+                                path = op.createPlan(start, stop, 1, false);
                                 //beräkna kostnaden för den optimala färdvägen mellan start och stop
                                 for (int k = 0; k < path.size() - 1; k++) {
                                     diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
@@ -74,7 +74,7 @@ public class OverordnatSystem {
                             if (start != stop) {
                                 //System.out.println("Start " + start + " Stop " + stop);
                                 //Planera via dijkstras färdvägen
-                                path = op.createPlan(start, stop, 1);
+                                path = op.createPlan(start, stop, 1, false);
                                 //beräkna kostnaden för den optimala färdvägen mellan start och stop
                                 for (int k = 0; k < path.size() - 1; k++) {
                                     diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
@@ -202,13 +202,13 @@ public class OverordnatSystem {
         int stop1 = 0, stop2 = 0;
         OptPlan op = new OptPlan(ds);
 
-        LinkedList<Vertex> path1;
+        LinkedList<Vertex> path1 = null;
         LinkedList<Vertex> path2;
 
         //Optimerar orderlistan genom att ta bort onödiga förflyttningar och ordnar ordrarna på så sätt att avståndet som körs utan låda minimeras
         ds6 = this.onodigaforflytt(ds5);
         ds6 = this.optorderlista(ds6, op);
-
+        Arrays.fill(ds.notoknumber, 0);
         ds3 = this.onodigaforflytt(ds2);
         ds3 = this.optorderlista(ds3, op);
 
@@ -293,15 +293,34 @@ public class OverordnatSystem {
             //Uppdaterar kartan
             cui.repaint();
             if (start1 != stop1) {
-                path1 = op.createPlan(start1, stop1, 1);
+                path1 = op.createPlan(start1, stop1, 1, true);
                 //GPS = this.GPSkoordinater(path1, i, i);
             } else if (start1 == stop1 && start1 == 24) {
                 GPS += "J";
             }
+            boolean clear = false;
+            for (int j = 0; j < path1.size(); j++) {
+                if(Integer.parseInt(path1.get(i).getId()) == stop2){
+                    clear = true;
+                    break;
+                }
+            }
+            if(clear) {
+                Arrays.fill(ds.notoknumber, 0);
+                Arrays.fill(ds.arcColor, 0);
+            }
+            
             if (start2 != stop2) {
-                path2 = op.createPlan(start2, stop2, 2);
+                path2 = op.createPlan(start2, stop2, 2, true);
                 //GPS = this.GPSkoordinater(path2, i, i);
             } else if (start2 == stop2 && start2 == 24) {
+                GPS += "J";
+            }
+            
+            if (start1 != stop1 && clear) {
+                path1 = op.createPlan(start1, stop1, 1, true);
+                //GPS = this.GPSkoordinater(path1, i, i);
+            } else if (start1 == stop1 && start1 == 24 && clear) {
                 GPS += "J";
             }
             //Skriver ut vad som ska skickas till roboten
@@ -347,13 +366,13 @@ public class OverordnatSystem {
 
             //Samma som för förflyttning utan låda
             if (start1 != stop1) {
-                path1 = op.createPlan(start1, stop1, 1);
+                path1 = op.createPlan(start1, stop1, 1, true);
                 //GPS = this.GPSkoordinater(path1, i, i);
             } else if (start1 == stop1 && start1 == 24) {
                 GPS += "J";
             }
             if (start2 != stop2) {
-                path2 = op.createPlan(start2, stop2, 2);
+                path2 = op.createPlan(start2, stop2, 2, true);
                 //GPS = this.GPSkoordinater(path2, i, i);
             } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
