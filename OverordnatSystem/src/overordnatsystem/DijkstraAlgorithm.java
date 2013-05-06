@@ -35,7 +35,7 @@ public class DijkstraAlgorithm {
     }
 
     public void execute(Vertex source) {
-        System.out.println("source.toString() " + source.toString());
+        //System.out.println("source.toString() " + source.toString());
         settledNodes = new HashSet<Vertex>();
         unSettledNodes = new HashSet<Vertex>();
         distance = new HashMap<Vertex, Integer>();
@@ -44,7 +44,7 @@ public class DijkstraAlgorithm {
         unSettledNodes.add(source);
         while (unSettledNodes.size() > 0) {
             Vertex node = getMinimum(unSettledNodes);
-            System.out.println("node.toString() " + node.toString());
+            //System.out.println("node.toString() " + node.toString());
             settledNodes.add(node);
             unSettledNodes.remove(node);
             findMinimalDistances(node);
@@ -53,21 +53,31 @@ public class DijkstraAlgorithm {
 
     private void findMinimalDistances(Vertex node) {
         List<Vertex> adjacentNodes = getNeighbors(node);
+        Vertex lasttarget = null;
         for (Vertex target : adjacentNodes) {
             System.out.println("target.toString() " + target.toString());
-            boolean cont = true;
-            for(int i = 0; i < ds.notoknumber.length; i++){
-                if(ds.notoknumber[i] == Integer.parseInt(target.getId())){
-                    cont = false;
-                }
-            }
+
             if (getShortestDistance(target) > getShortestDistance(node)
-                    + getDistance(node, target) && cont) {
+                    + getDistance(node, target)) {
                 distance.put(target, getShortestDistance(node)
                         + getDistance(node, target));
                 predecessors.put(target, node);
                 unSettledNodes.add(target);
             }
+            for (int i = 0; i < ds.notoknumber.length - 1; i++) {
+                if (predecessors.get(target) != null) {
+                    if (ds.notoknumber[i + 1] == Integer.parseInt(predecessors.get(target).getId()) && ds.notoknumber[i] == Integer.parseInt(target.getId())) {
+                        predecessors.remove(target);
+                        predecessors.remove(lasttarget);
+                        distance.remove(target);
+                        distance.remove(lasttarget);
+                    }
+                }
+            }
+            lasttarget = target;
+            //System.out.println("predecessors.get(target) " + predecessors.get(target));
+            //System.out.println("predecessors.get(predecessors.get(target) " + predecessors.get(predecessors.get(target)));
+            //System.out.println("predecessors.get(predecessors.get(predecessors.get(target))) " + predecessors.get(predecessors.get(predecessors.get(target))) + "\n");
         }
 
     }

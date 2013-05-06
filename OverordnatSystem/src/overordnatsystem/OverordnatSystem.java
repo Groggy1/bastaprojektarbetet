@@ -208,7 +208,7 @@ public class OverordnatSystem {
         //Optimerar orderlistan genom att ta bort onödiga förflyttningar och ordnar ordrarna på så sätt att avståndet som körs utan låda minimeras
         ds6 = this.onodigaforflytt(ds5);
         ds6 = this.optorderlista(ds6, op);
-        Arrays.fill(ds.notoknumber, 0);
+        Arrays.fill(ds.notoknumber, 500);
         ds3 = this.onodigaforflytt(ds2);
         ds3 = this.optorderlista(ds3, op);
 
@@ -306,7 +306,7 @@ public class OverordnatSystem {
                 }
             }
             if (clear) {
-                Arrays.fill(ds.notoknumber, 0);
+                Arrays.fill(ds.notoknumber, 500);
                 Arrays.fill(ds.arcColor, 0);
             }
 
@@ -344,7 +344,7 @@ public class OverordnatSystem {
             //}
             //Nollställ kartan
             Arrays.fill(ds.arcColor, 0);
-            Arrays.fill(ds.notoknumber, 0);
+            Arrays.fill(ds.notoknumber, 500);
 
             //Räkna ut förflyttning av LÅDA!
             GPS = "";
@@ -399,7 +399,7 @@ public class OverordnatSystem {
             //}
             //Nollställer kartan
             Arrays.fill(ds.arcColor, 0);
-            Arrays.fill(ds.notoknumber, 0);
+            Arrays.fill(ds.notoknumber, 500);
             //Ser till att roboten står på rätt ställe på kartan som den gör i verkligheten så programlogiken pausas
             ds.robot1X = ds.nodeX[stop1 - 1];
             ds.robot1Y = ds.nodeY[stop1 - 1];
