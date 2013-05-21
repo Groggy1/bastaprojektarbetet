@@ -325,21 +325,22 @@ public class OverordnatSystem {
                 GPS += "J";
             }
 
-            if (path1 != null) {
+            if (path1 != null && i < ds3.orders) {
                 for (int r = 0; r < path1.size(); r++) {
                     if (r < path1.size() - 1) {
                         trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path1.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path1.get(r + 1).getId()) - 1])));
                     }
                 }
             }
-            if (path2 != null) {
+            if (path2 != null && i < ds6.orders) {
                 for (int r = 0; r < path2.size(); r++) {
                     if (r < path2.size() - 1) {
-                        trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
+                        trip2 = trip2 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
                     }
                 }
             }
 
+            System.out.println("Trip1 " + trip1 + " Trip2 " + trip2);
             trip = trip + Math.max(trip1, trip2);
             trip1 = 0;
             trip2 = 0;
@@ -387,13 +388,13 @@ public class OverordnatSystem {
 
             //Samma som för förflyttning utan låda
             if (start1 != stop1) {
-                path2 = op.createPlan(start2, stop2, 2, true);
+                path1 = op.createPlan(start1, stop1, 1, true);
                 //GPS = this.GPSkoordinater(path1, i, i);
             } else if (start1 == stop1 && start1 == 24) {
                 GPS += "J";
             }
             clear = false;
-            for (int j = 0; j < path2.size(); j++) {
+            for (int j = 0; j < path1.size(); j++) {
                 if (Integer.parseInt(path1.get(i).getId()) == stop2) {
                     clear = true;
                     break;
@@ -405,34 +406,35 @@ public class OverordnatSystem {
             }
 
             if (start2 != stop2) {
-                path1 = op.createPlan(start1, stop1, 1, true);
+                path2 = op.createPlan(start2, stop2, 2, true);
                 //GPS = this.GPSkoordinater(path2, i, i);
             } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
 
             if (start1 != stop1 && clear) {
-                path2 = op.createPlan(start2, stop2, 2, true);
+                path1 = op.createPlan(start1, stop1, 1, true);
                 //GPS = this.GPSkoordinater(path1, i, i);
             } else if (start1 == stop1 && start1 == 24 && clear) {
                 GPS += "J";
             }
 
-            if (path1 != null) {
+            if (path1 != null && i < ds3.orders) {
                 for (int r = 0; r < path1.size(); r++) {
                     if (r < path1.size() - 1) {
                         trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path1.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path1.get(r + 1).getId()) - 1])));
                     }
                 }
             }
-            if (path2 != null) {
+            if (path2 != null && i < ds6.orders) {
                 for (int r = 0; r < path2.size(); r++) {
                     if (r < path2.size() - 1) {
-                        trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
+                        trip2 = trip2 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
                     }
                 }
             }
-
+            
+            System.out.println("Trip1 " + trip1 + " Trip2 " + trip2);
             trip = trip + Math.max(trip1, trip2);
             trip1 = 0;
             trip2 = 0;
