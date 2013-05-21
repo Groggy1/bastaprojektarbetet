@@ -307,21 +307,21 @@ public class OverordnatSystem {
             }
 
 
-            if (path1 != null) {
+            if (path1 != null && i < ds3.orders) {
                 for (int r = 0; r < path1.size(); r++) {
                     if (r < path1.size() - 1) {
                         trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path1.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path1.get(r + 1).getId()) - 1])));
                     }
                 }
             }
-            if (path2 != null) {
+            if (path2 != null && i < ds6.orders) {
                 for (int r = 0; r < path2.size(); r++) {
                     if (r < path2.size() - 1) {
-                        trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
+                        trip2 = trip2 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
                     }
                 }
             }
-            
+            System.out.println("Trip1 " + trip1 + " Trip2 " + trip2);
             trip = trip +  Math.max(trip1,trip2);
             trip1 = 0;
             trip2 = 0;
@@ -380,21 +380,22 @@ public class OverordnatSystem {
                 GPS += "J";
             }
             
-            if (path1 != null) {
+            if (path1 != null && i < ds3.orders) {
                 for (int r = 0; r < path1.size(); r++) {
                     if (r < path1.size() - 1) {
                         trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path1.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path1.get(r + 1).getId()) - 1])));
                     }
                 }
             }
-            if (path2 != null) {
+            if (path2 != null && i < ds6.orders) {
                 for (int r = 0; r < path2.size(); r++) {
                     if (r < path2.size() - 1) {
-                        trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
+                        trip2 = trip2 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
                     }
                 }
             }
             
+            System.out.println("Trip1 " + trip1 + " Trip2 " + trip2);
             trip = trip +  Math.max(trip1,trip2);
             trip1 = 0;
             trip2 = 0;
