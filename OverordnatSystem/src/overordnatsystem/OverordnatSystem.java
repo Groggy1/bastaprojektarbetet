@@ -388,8 +388,7 @@ public class OverordnatSystem {
         }*/
 
         //Olika nödvändiga variabler tilldelas viktiga värden som de inte klarar sig utan
-        ds3.orders = ds2.orders;
-        ds3.fileName = ds2.fileName;
+        ds3 = ds2;
         ds4.orders = ds2.orders;
         ds4.fileName = ds2.fileName;
 
@@ -403,8 +402,8 @@ public class OverordnatSystem {
         LinkedList<Vertex> path = null;
 
         //Optimerar orderlistan genom att ta bort onödiga förflyttningar och ordnar ordrarna på så sätt att avståndet som körs utan låda minimeras
-        ds3 = this.onodigaforflytt(ds2);
-        ds3 = this.optorderlista(ds3, op);
+        //ds3 = this.onodigaforflytt(ds2);
+        //ds3 = this.optorderlista(ds3, op);
 
         //skriv ut den optimerade orderlistan i orderlistafönstret
         cui.jTextArea2.append("Optimerad orderlista:\n");
