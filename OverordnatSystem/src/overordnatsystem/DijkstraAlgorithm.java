@@ -64,7 +64,10 @@ public class DijkstraAlgorithm {
                 predecessors.put(target, node);
                 unSettledNodes.add(target);
             }
+            //System.out.println("predecessors.get(target) " + predecessors.get(target));
+            //System.out.println("predecessors.get(predecessors.get(target)) " + predecessors.get(predecessors.get(target)));
             for (int i = 0; i < ds.notoknumber.length - 1; i++) {
+                //System.out.println("ds.notoknumber[i] " + ds.notoknumber[i] + " ds.notoknumber[i + 1] " + ds.notoknumber[i+1]);
                 if (predecessors.get(target) != null) {
                     if (ds.notoknumber[i + 1] == Integer.parseInt(predecessors.get(target).getId()) && ds.notoknumber[i] == Integer.parseInt(target.getId())) {
                         predecessors.remove(target);

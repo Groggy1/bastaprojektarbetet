@@ -53,7 +53,7 @@ public class OptPlan {
         // Get shortest path
         if (intekrock) {
             System.out.println("path.size() " + path.size());
-            for (int i = 1; i < path.size() - 1; i++) {
+            for (int i = 0; i < path.size(); i++) {
                 ds.notoknumber[i] = Integer.parseInt(path.get(i).getId());
                 System.out.println("ds.notoknumber[i] " + ds.notoknumber[i]);
             }
