@@ -293,16 +293,16 @@ public class OverordnatSystem {
             ds.robot2Y = ds.nodeY[start2 - 1];
             //Uppdaterar kartan
             cui.repaint();
-            if (start2 != stop2) {
-                path2 = op.createPlan(start2, stop2, 2, true);
+            if (start1 != stop1) {
+                path1 = op.createPlan(start1, stop1, 1, true);
                 //GPS = this.GPSkoordinater(path1, i, i);
-            } else if (start2 == stop2 && start2 == 24) {
+            } else if (start1 == stop1 && start1 == 24) {
                 GPS += "J";
             }
             boolean clear = false;
             for (int j = 0; j < ds.notoknumber.length; j++) {
                 //System.out.println("ds.notoknumber[j] " + ds.notoknumber[j]);
-                if (ds.notoknumber[j] == stop1 || ds.notoknumber[j] == start1) {
+                if (ds.notoknumber[j] == stop2 || ds.notoknumber[j] == start2) {
                     clear = true;
                     break;
                 }
@@ -312,17 +312,17 @@ public class OverordnatSystem {
                 Arrays.fill(ds.arcColor, 0);
             }
 
-            if (start1 != stop1) {
-                path1 = op.createPlan(start1, stop1, 1, true);
+            if (start2 != stop2) {
+                path2 = op.createPlan(start2, stop2, 2, true);
                 //GPS = this.GPSkoordinater(path2, i, i);
-            } else if (start1 == stop1 && start1 == 24) {
+            } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
 
-            if (start2 != stop2 && clear) {
-                path2 = op.createPlan(start2, stop2, 2, true);
+            if (start1 != stop1 && clear) {
+                path1 = op.createPlan(start1, stop1, 1, true);
                 //GPS = this.GPSkoordinater(path1, i, i);
-            } else if (start2 == stop2 && start2 == 24 && clear) {
+            } else if (start1 == stop1 && start1 == 24 && clear) {
                 GPS += "J";
             }
 
@@ -388,16 +388,16 @@ public class OverordnatSystem {
             }
 
             //Samma som för förflyttning utan låda
-            if (start2 != stop2) {
-                path2 = op.createPlan(start2, stop2, 2, true);
+            if (start1 != stop1) {
+                path1 = op.createPlan(start1, stop1, 1, true);
                 //GPS = this.GPSkoordinater(path1, i, i);
-            } else if (start2 == stop2 && start2 == 24) {
+            } else if (start1 == stop1 && start1 == 24) {
                 GPS += "J";
             }
             clear = false;
             for (int j = 0; j < ds.notoknumber.length; j++) {
-                //System.out.println("path2.get(i) " + path2.get(i) + " stop1 " + stop1);
-                if (ds.notoknumber[j] == stop1 || ds.notoknumber[j] == start1) {
+                //System.out.println("ds.notoknumber[j] " + ds.notoknumber[j]);
+                if (ds.notoknumber[j] == stop2 || ds.notoknumber[j] == start2) {
                     clear = true;
                     break;
                 }
@@ -407,17 +407,17 @@ public class OverordnatSystem {
                 Arrays.fill(ds.arcColor, 0);
             }
 
-            if (start1 != stop1) {
-                path1 = op.createPlan(start1, stop1, 1, true);
+            if (start2 != stop2) {
+                path2 = op.createPlan(start2, stop2, 2, true);
                 //GPS = this.GPSkoordinater(path2, i, i);
-            } else if (start1 == stop1 && start1 == 24) {
+            } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
 
-            if (start2 != stop2 && clear) {
-                path1 = op.createPlan(start2, stop2, 2, true);
+            if (start1 != stop1 && clear) {
+                path1 = op.createPlan(start1, stop1, 1, true);
                 //GPS = this.GPSkoordinater(path1, i, i);
-            } else if (start2 == stop2 && start2 == 24 && clear) {
+            } else if (start1 == stop1 && start1 == 24 && clear) {
                 GPS += "J";
             }
 
