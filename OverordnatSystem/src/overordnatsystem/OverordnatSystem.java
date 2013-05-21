@@ -18,7 +18,7 @@ public class OverordnatSystem {
     DataStore ds;
     DataStore ds3;
     ControlUI cui;
-    
+
     public DataStore optorderlista(DataStore ds3, OptPlan op) {
         //Massa bra variabler
         LinkedList<Vertex> path;
@@ -141,6 +141,9 @@ public class OverordnatSystem {
     }
 
     OverordnatSystem() {
+        double trip = 0;
+        double trip1 = 0;
+        double trip2 = 0;
         ds = new DataStore();
         DataStore ds2 = new DataStore();
         DataStore ds4 = new DataStore();
@@ -188,12 +191,10 @@ public class OverordnatSystem {
         }
 
         //Olika nödvändiga variabler tilldelas viktiga värden som de inte klarar sig utan
-        ds3.orders = ds2.orders;
-        ds3.fileName = ds2.fileName;
+        ds3 = ds2;
         ds4.orders = ds2.orders;
         ds4.fileName = ds2.fileName;
-        ds6.orders = ds5.orders;
-        ds6.fileName = ds5.fileName;
+        ds6 = ds5;
 
         System.out.println("\n\n\n\n\n");
 
@@ -202,15 +203,15 @@ public class OverordnatSystem {
         int stop1 = 0, stop2 = 0;
         OptPlan op = new OptPlan(ds);
 
-        LinkedList<Vertex> path1;
-        LinkedList<Vertex> path2;
+        LinkedList<Vertex> path1 = null;
+        LinkedList<Vertex> path2 = null;
 
         //Optimerar orderlistan genom att ta bort onödiga förflyttningar och ordnar ordrarna på så sätt att avståndet som körs utan låda minimeras
-        ds6 = this.onodigaforflytt(ds5);
-        ds6 = this.optorderlista(ds6, op);
+        //ds6 = this.onodigaforflytt(ds5);
+        //ds6 = this.optorderlista(ds6, op);
 
-        ds3 = this.onodigaforflytt(ds2);
-        ds3 = this.optorderlista(ds3, op);
+        //ds3 = this.onodigaforflytt(ds2);
+        //ds3 = this.optorderlista(ds3, op);
 
         //skriv ut den optimerade orderlistan i orderlistafönstret
             /*for(int i = 0; i < ds3.orders; i++) {
@@ -304,6 +305,26 @@ public class OverordnatSystem {
             } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
+
+
+            if (path1 != null) {
+                for (int r = 0; r < path1.size(); r++) {
+                    if (r < path1.size() - 1) {
+                        trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path1.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path1.get(r + 1).getId()) - 1])));
+                    }
+                }
+            }
+            if (path2 != null) {
+                for (int r = 0; r < path2.size(); r++) {
+                    if (r < path2.size() - 1) {
+                        trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
+                    }
+                }
+            }
+            
+            trip = trip +  Math.max(trip1,trip2);
+            trip1 = 0;
+            trip2 = 0;
             //Skriver ut vad som ska skickas till roboten
             //cui.jTextArea1.append("\nGPS utan låda:\n" + GPS + "\n\n");
             //System.out.println("GPS.längd " + GPS.length() + "\n");
@@ -358,6 +379,25 @@ public class OverordnatSystem {
             } else if (start2 == stop2 && start2 == 24) {
                 GPS += "J";
             }
+            
+            if (path1 != null) {
+                for (int r = 0; r < path1.size(); r++) {
+                    if (r < path1.size() - 1) {
+                        trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path1.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path1.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path1.get(r + 1).getId()) - 1])));
+                    }
+                }
+            }
+            if (path2 != null) {
+                for (int r = 0; r < path2.size(); r++) {
+                    if (r < path2.size() - 1) {
+                        trip1 = trip1 + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path2.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path2.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path2.get(r + 1).getId()) - 1])));
+                    }
+                }
+            }
+            
+            trip = trip +  Math.max(trip1,trip2);
+            trip1 = 0;
+            trip2 = 0;
 
             //Samma som för förflyttning utan låda
             //cui.jTextArea1.append("\nGPS med låda:\n" + GPS + "\n\n");
@@ -387,6 +427,7 @@ public class OverordnatSystem {
             //Uppdaterar kartan
             cui.repaint();
         }
+        System.out.println("TRIP:" + trip);
     }
 
     /*
