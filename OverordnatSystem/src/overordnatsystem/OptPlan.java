@@ -61,7 +61,7 @@ public class OptPlan {
                 if (ds.arcStart[j] == Integer.parseInt(path.get(i).getId())
                         && ds.arcEnd[j]
                         == Integer.parseInt(path.get(i + 1).getId())) {
-                    System.out.println("Arc: " + j);
+                    //System.out.println("Arc: " + j);
                     ds.arcColor[j] = 1;
                 }
             }

@@ -27,7 +27,7 @@ public class ControlUI extends javax.swing.JFrame {
 
         this.ds = ds;
         myinitComponents();
-        setTitle("Styrsystem grupp 3");
+        setTitle("En robot");
 
     }
 

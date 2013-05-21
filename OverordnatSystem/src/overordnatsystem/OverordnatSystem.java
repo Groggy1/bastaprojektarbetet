@@ -4,9 +4,6 @@
  */
 package overordnatsystem;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 //import javax.microedition.io.Connector;
@@ -21,59 +18,6 @@ public class OverordnatSystem {
     DataStore ds;
     DataStore ds3;
     ControlUI cui;
-
-    public String bluetoothkom(BufferedReader bluetooth_in) {
-        String meddelande_ut = "";
-        try {
-            cui.jTextArea1.append("väntar\n");
-            cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength());
-            //Väntar på meddelande från robot
-            String meddelande_in = bluetooth_in.readLine();
-            System.out.println(meddelande_in);
-
-            //Om distans används följande variabler
-            String O = "" + meddelande_in.charAt(0);
-            String U = meddelande_in.substring(1);
-
-            //Om robot mottar orderlista med x som start och z som slut fås ack tillbaka
-            if (meddelande_in.equalsIgnoreCase("C")) {
-                cui.jTextArea1.append("Jag har fått ack\n");
-                cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength());
-                // System.out.println("Jag ska vänta 5000ms");
-                // Thread.sleep(5000);
-                // System.out.println("väntar");
-
-                // meddelande_in = null;
-                //Vänta på hur det går för roboten, dvs om den klarade orderlistan eller inte
-                meddelande_in = bluetooth_in.readLine();
-
-                System.out.println("meddelande_in efter ack " + meddelande_in);
-
-                //Klarade orderlistan
-                if (meddelande_in.equalsIgnoreCase("y")) {
-                    cui.jTextArea1.append("klar\nkalla på optimeringen\n");
-                    cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength()); //autoscroll
-                    //System.out.println("");
-                    meddelande_ut = "start";
-                } else if (meddelande_in.equalsIgnoreCase("n")) {
-                    //Klarade inte orderlistan
-                    cui.jTextArea1.append("Jag är LITHe vilse\n");
-                    meddelande_ut = "start";
-
-                }
-            } else if (meddelande_in.equalsIgnoreCase("e")) {
-                //Felsändning
-                System.out.println("Skicka om");
-                meddelande_ut = "start";
-            } else if (O.equalsIgnoreCase("D")) {
-                //Distans
-                System.out.println("Distansen är: " + U + "cm");
-            }
-        } catch (Exception e) {
-            System.out.print(e.toString());
-        }
-        return meddelande_ut;
-    }
 
     public String GPSkoordinater(LinkedList<Vertex> path, int istart, int istop) {
         String GPS = "";
@@ -389,6 +333,7 @@ public class OverordnatSystem {
     }
 
     OverordnatSystem() {
+        double trip = 0;
         ds = new DataStore();
         DataStore ds2 = new DataStore();
         DataStore ds4 = new DataStore();
@@ -435,25 +380,12 @@ public class OverordnatSystem {
 
         //Väntar på att användaren väljer att klicka på "start" i gränssnittet, om inte så sova fem sekunder och kolla igen
         /*while (!ds.start) {
-         try {
-         Thread.sleep(5000);
-         } catch (Exception e) {
-         System.out.print(e.toString());
-         }
-         }*/
-
-        //Försöka upprätta blåtands kommunikation
-        //try {
-            /*
-         StreamConnection anslutning = (StreamConnection) Connector.open("btspp://F07BCBF04304:8");
-         PrintStream bluetooth_ut = new PrintStream(anslutning.openOutputStream());
-         //F07BCBF04304:8 testdator
-         BufferedReader bluetooth_in = new BufferedReader(new InputStreamReader(anslutning.openInputStream()));
-
-         BufferedReader tangentbord = new BufferedReader(new InputStreamReader(System.in));
-
-         String meddelande_ut = "start";
-         */
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                System.out.print(e.toString());
+            }
+        }*/
 
         //Olika nödvändiga variabler tilldelas viktiga värden som de inte klarar sig utan
         ds3.orders = ds2.orders;
@@ -468,16 +400,11 @@ public class OverordnatSystem {
         int stop;
         OptPlan op = new OptPlan(ds);
 
-        LinkedList<Vertex> path;
+        LinkedList<Vertex> path = null;
 
         //Optimerar orderlistan genom att ta bort onödiga förflyttningar och ordnar ordrarna på så sätt att avståndet som körs utan låda minimeras
         ds3 = this.onodigaforflytt(ds2);
         ds3 = this.optorderlista(ds3, op);
-
-        //skriv ut den optimerade orderlistan i orderlistafönstret
-            /*for(int i = 0; i < ds3.orders; i++) {
-         cui.jTextArea2.append(ds3.arcStart[i] + " " + ds3.arcEnd[i]);
-         }*/
 
         //skriv ut den optimerade orderlistan i orderlistafönstret
         cui.jTextArea2.append("Optimerad orderlista:\n");
@@ -495,14 +422,6 @@ public class OverordnatSystem {
         //Loopa igenom orderlistan för att få fram GPS-koordinater till roboten
         String GPS;
         for (int i = 0; i < ds3.orders; i++) {
-            //stoppa roboten när den precis har lämnat en låda men bibehåll blåtands uppkopplingen
-                /*while (!ds.start) {
-             try {
-             Thread.sleep(5000);
-             } catch (Exception e) {
-             System.out.print(e.toString());
-             }
-             }*/
             //Förflyttning mellan ordrar
             GPS = "";
             if (i == 0) {
@@ -524,22 +443,18 @@ public class OverordnatSystem {
                 //Om två hyllor efter varandra är på samma nod, vänd bara om och plocka
                 GPS += "J";
             }
+
+            if (path != null) {
+                for (int r = 0; r < path.size(); r++) {
+                    if (r < path.size() - 1) {
+                        trip = trip + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(r + 1).getId()) - 1])));
+                    }
+                }
+            }
             //Skriver ut vad som ska skickas till roboten
             cui.jTextArea1.append("\nGPS utan låda:\n" + GPS + "\n\n");
             System.out.println("GPS.längd " + GPS.length() + "\n");
             cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength());
-
-            //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
-                /*
-             if (GPS.length() > 0) {
-             if (meddelande_ut.equalsIgnoreCase("start")) {
-             meddelande_ut = GPS;
-             meddelande_ut = "x" + meddelande_ut + "z";
-             System.out.println("mellan meddelande_ut " + meddelande_ut);
-             bluetooth_ut.println(meddelande_ut);
-             }
-             meddelande_ut = this.bluetoothkom(bluetooth_in);
-             */
 
             //Måla om kartan så roboten står på rätt ställe och planerad färdväg är målas röd
             ds.robotX = ds.nodeX[start - 1];
@@ -569,23 +484,18 @@ public class OverordnatSystem {
             } else if (start == stop && start == 24) {
                 GPS += "J";
             }
+            if (path != null) {
+                for (int r = 0; r < path.size(); r++) {
+                    if (r < path.size() - 1) {
+                        trip = trip + (Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(r).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(r + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(r).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(r + 1).getId()) - 1])));
+                    }
+                }
+            }
 
             //Samma som för förflyttning utan låda
             cui.jTextArea1.append("\nGPS med låda:\n" + GPS + "\n\n");
             System.out.println("GPS.längd " + GPS.length() + "\n");
             cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength());
-
-            //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
-                /*
-             if (GPS.length() > 0) {
-             if (meddelande_ut.equalsIgnoreCase("start")) {
-             meddelande_ut = GPS;
-             meddelande_ut = "x" + meddelande_ut + "z";
-             System.out.println("under meddelande_ut " + meddelande_ut);
-             bluetooth_ut.println(meddelande_ut);
-             }
-             meddelande_ut = this.bluetoothkom(bluetooth_in);
-             */
 
             //Samma som för förflyttning utan låda
             ds.robotX = ds.nodeX[start - 1];
@@ -606,9 +516,7 @@ public class OverordnatSystem {
             //Uppdaterar kartan
             cui.repaint();
         }
-        /*} catch (Exception e) {
-         System.out.print(e.toString());
-         }*/
+        System.out.println("TRIP:" + trip);
     }
 
     /*
